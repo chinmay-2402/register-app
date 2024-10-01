@@ -4,7 +4,14 @@ pipeline {
         jdk 'Java17'      // Make sure "Java17" is defined in Jenkins Global Tool Configuration
         maven 'Maven3'    // Make sure "Maven3" is defined in Jenkins Global Tool Configuration
     }
-    
+    environment {
+        APP_NAME = "register-app-pipeline"
+        RELEASE = "1.0.0"
+        DOCKER_USER = "chinmay2402"
+        DOCKER_PASS = 'dockerhub'    // Make sure "dockerhub" is defined as a secret text credential in Jenkins
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
+        IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+    }
     stages {
         stage("Cleanup Workspace") {
             steps {
@@ -29,6 +36,21 @@ pipeline {
                 sh "mvn test"
             }
         }
+        
+        stage("Build & Push Docker Image") {
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub') { // Using the credentialsId for Docker Hub authentication
+                        def dockerImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                        
+                        // Pushing with the versioned tag
+                        dockerImage.push("${IMAGE_TAG}")
+                        // Pushing with the 'latest' tag
+                        dockerImage.push("latest")
+                    }
+                }
+            }
+        }
     }
     
     post {
@@ -44,3 +66,4 @@ pipeline {
         }
     }
 }
+
