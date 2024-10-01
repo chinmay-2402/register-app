@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'jenkins-agent' }
+    agent { label 'master' }
     tools {
         jdk 'Java17'      // Ensure "Java17" is defined in Jenkins Global Tool Configuration
         maven 'Maven3'    // Ensure "Maven3" is defined in Jenkins Global Tool Configuration
