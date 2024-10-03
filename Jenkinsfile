@@ -10,7 +10,7 @@ pipeline {
         APP_NAME = "register-app-pipeline"
         RELEASE = "1.0.0"
         AWS_REGION = "ap-south-1"  // Change to your AWS region
-        AWS_ACCOUNT_ID = "9750-5033-4111" // Replace with your AWS Account ID
+        AWS_ACCOUNT_ID = "975050334111" // Replace with your AWS Account ID
         ECR_REPO = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         ECS_CLUSTER = "register-app-cluster" // Replace with your ECS Cluster name
