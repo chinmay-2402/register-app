@@ -33,7 +33,7 @@ pipeline {
 
         stage('Build Application') {
             steps {
-                sh "mvn clean package"
+                sh "mvn clean package -u"
             }
         }
 
@@ -50,7 +50,7 @@ pipeline {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${CREDENTIALS_ID}"]]) {
                         sh '''
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
-                        docker build -t ${APP_NAME}:${IMAGE_TAG} .
+                        docker build --no-cache -t ${APP_NAME}:${IMAGE_TAG} .
                         docker tag ${APP_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
                         docker push ${ECR_REPO}:${IMAGE_TAG}
                         '''
